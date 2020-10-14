@@ -4,6 +4,9 @@ import {
   isMetricAggregationWithField,
   isPipelineAggregation,
   MetricAggregation,
+  MovingAverageModelOption,
+  MovingAverageModelSettings,
+  MovingAverageSetting,
 } from './components/MetricAggregationsEditor/state/types';
 import { metricAggregationConfig, pipelineOptions } from './components/MetricAggregationsEditor/utils';
 import { BucketsConfiguration, BucketAggregation, ElasticsearchQuery } from './types';
@@ -74,28 +77,30 @@ export const intervalOptions = [
   { text: '1d', value: '1d' },
 ];
 
-export const movingAvgModelOptions = [
-  { text: 'Simple', value: 'simple' },
-  { text: 'Linear', value: 'linear' },
-  { text: 'Exponentially Weighted', value: 'ewma' },
-  { text: 'Holt Linear', value: 'holt' },
-  { text: 'Holt Winters', value: 'holt_winters' },
+export const movingAvgModelOptions: MovingAverageModelOption[] = [
+  { label: 'Simple', value: 'simple' },
+  { label: 'Linear', value: 'linear' },
+  { label: 'Exponentially Weighted', value: 'ewma' },
+  { label: 'Holt Linear', value: 'holt' },
+  { label: 'Holt Winters', value: 'holt_winters' },
 ];
 
-export const movingAvgModelSettings: any = {
+const alphaSetting: MovingAverageSetting = { label: 'Alpha', value: 'alpha' };
+const betaSetting: MovingAverageSetting = { label: 'Beta', value: 'beta' };
+const minimizeSetting: MovingAverageSetting = { label: 'Minimize', value: 'minimize', type: 'boolean' };
+
+export const movingAvgModelSettings: MovingAverageModelSettings = {
   simple: [],
   linear: [],
-  ewma: [{ text: 'Alpha', value: 'alpha', default: undefined }],
-  holt: [
-    { text: 'Alpha', value: 'alpha', default: undefined },
-    { text: 'Beta', value: 'beta', default: undefined },
-  ],
+  ewma: [alphaSetting, minimizeSetting],
+  holt: [alphaSetting, betaSetting, minimizeSetting],
   holt_winters: [
-    { text: 'Alpha', value: 'alpha', default: undefined },
-    { text: 'Beta', value: 'beta', default: undefined },
-    { text: 'Gamma', value: 'gamma', default: undefined },
-    { text: 'Period', value: 'period', default: undefined },
-    { text: 'Pad', value: 'pad', default: undefined, isCheckbox: true },
+    alphaSetting,
+    betaSetting,
+    { label: 'Gamma', value: 'gamma' },
+    { label: 'Period', value: 'period' },
+    { label: 'Pad', value: 'pad', type: 'boolean' },
+    minimizeSetting,
   ],
 };
 

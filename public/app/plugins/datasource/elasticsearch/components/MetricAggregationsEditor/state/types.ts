@@ -128,7 +128,9 @@ interface ExtendedStats
     script?: string;
     missing?: string;
     sigma?: string;
-  } & { [P in ExtendedStatType]?: boolean };
+  } & {
+    [P in ExtendedStatType]?: boolean;
+  };
 }
 
 interface Percentiles
@@ -177,12 +179,35 @@ interface PipelineMetricAggregationWithMoultipleBucketPaths extends BasePipeline
   pipelineVariables?: PipelineVariable[];
 }
 
+type MovingAverageModel = 'simple' | 'linear' | 'ewma' | 'holt' | 'holt_winters';
+
+export interface MovingAverageModelOption {
+  label: string;
+  value: MovingAverageModel;
+}
+
+type MovingAverageSettingValue = 'alpha' | 'beta' | 'gamma' | 'period' | 'pad' | 'minimize';
+
+export interface MovingAverageSetting {
+  label: string;
+  value: MovingAverageSettingValue;
+  // TODO: This might not be needed
+  default?: string;
+  /**
+   *  TODO: Check if this makes sense
+   *  Setting type, defaults to string
+   */
+  type?: 'boolean' | 'string';
+}
+
+export type MovingAverageModelSettings = Record<MovingAverageModel, MovingAverageSetting[]>;
+
 interface MovingAverage extends BasePipelineMetricAggregation, MetricAggregationWithSettings {
   type: 'moving_avg';
-  settings: {
-    model?: string; // TODO: pick the correct types
-    window?: number;
-    predict?: unknown;
+  settings?: {
+    model?: MovingAverageModel;
+    window?: string;
+    predict?: string;
   };
 }
 
